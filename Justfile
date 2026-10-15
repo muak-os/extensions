@@ -14,11 +14,10 @@ set positional-arguments
 # Global settings
 
 registry := env_var_or_default("REGISTRY", "ghcr.io/muak-os")
-tag := env_var_or_default("TAG", "latest")
+tag := env_var_or_default("TAG", "dev")
 toolchain := env_var_or_default("TOOLCHAIN", "ghcr.io/muak-os/toolchain@sha256:aa9208691a4799dc34b42acb9a14aef4d7599d554ecaac1e36c9c76319cbd960")
 alpine_version := "3.24"
 push := env_var_or_default("PUSH", "true")
-latest := env_var_or_default("LATEST", "false")
 extension := env_var_or_default("EXTENSION", "qemu")
 
 # Architecture
@@ -90,18 +89,13 @@ _build-oci name extension:
     image="{{ registry }}/{{ name }}:{{ tag }}"
     cache_from=$(just _cache-from "{{ name }}")
     cache_to=$(just _cache-to "{{ name }}")
-    tags="--tag ${image}"
-    if [ "{{ latest }}" = "true" ]; then
-        tags="${tags} --tag {{ registry }}/{{ name }}:latest"
-    fi
-    printf "{{ cyan }}Building OCI:{{ reset }} {{ name }} (push={{ push }}, latest={{ latest }})\n"
+    printf "{{ cyan }}Building OCI:{{ reset }} {{ name }} (push={{ push }})\n"
     {{ build_cmd }} {{ common_args }} {{ pull_arg }} \
-        ${cache_from} ${cache_to} {{ push_arg }} ${tags} \
+        ${cache_from} ${cache_to} {{ push_arg }} --tag "${image}" \
         --file {{ extension }}/Dockerfile \
         {{ extension }}
     if [ "{{ container_runtime }}" = "podman" ] && [ "{{ push }}" = "true" ]; then
         {{ container_runtime }} push "${image}"
-        if [ "{{ latest }}" = "true" ]; then {{ container_runtime }} push "{{ registry }}/{{ name }}:latest"; fi
     fi
 
 [private]

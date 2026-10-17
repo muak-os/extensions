@@ -8,7 +8,7 @@ Extension images for [muak](https://github.com/muak-os/muak).
 | --------- | ------ | ------- |
 | [QEMU](qemu/) | `qemu-system-x86_64`, `qemu-system-aarch64`, `qemu-img` | `9.2.0` |
 | [Firecracker](firecracker/) | `firecracker` + kernel and rootfs | `1.13.0` |
-| [Cloud Hypervisor](cloud-hypervisor/) | `cloud-hypervisor` (+ `CLOUDHV.fd` on x86_64) | `42.0` |
+| [Cloud Hypervisor](cloud-hypervisor/) | `cloud-hypervisor` (+ `CLOUDHV.fd` on x86_64) | `54.0` |
 
 Images are published to `ghcr.io/muak-os/extensions/<extension>` in `amd64` and `arm64`.
 

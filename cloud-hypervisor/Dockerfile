@@ -5,8 +5,8 @@ ARG ALPINE_VERSION
 FROM docker.io/alpine:${ALPINE_VERSION} AS downloader
 
 ARG TARGETARCH
-ARG CH_VERSION=v42.0
-ARG EDK2_VERSION=ch-a54f262b09
+ARG CH_VERSION=v54.0
+ARG EDK2_VERSION=ch-97eeb7b09
 
 ARG TARGET=${TARGETARCH/amd64/x86_64}
 ARG TARGET=${TARGET/arm64/aarch64}
@@ -39,6 +39,6 @@ COPY --from=downloader /output/ /
 # OCI labels for metadata
 LABEL org.opencontainers.image.title="cloud-hypervisor"
 LABEL org.opencontainers.image.description="Cloud Hypervisor - Open source Virtual Machine Monitor (VMM)"
-LABEL org.opencontainers.image.version="42.0"
+LABEL org.opencontainers.image.version="54.0"
 LABEL org.muak.extension.name="cloud-hypervisor"
-LABEL org.muak.extension.version="42.0"
+LABEL org.muak.extension.version="54.0"

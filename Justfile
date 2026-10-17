@@ -52,20 +52,32 @@ reset := '\e[0m'
 # Build
 # ─────────────────────────────────────────────────────────────────────────────
 
-# Full local development build (build -> repack)
+# Full local development build (oci -> repack)
 [group('build')]
-dev: build repack
+dev: oci repack
     @printf "{{ green }}Development build complete. Toolchain used: {{ bold }}{{ toolchain }}{{ reset }}\n"
-
-# Build the extension image and push.
-[group('build')]
-build:
-    @just _build-oci "{{ extension_repository }}" "{{ extension }}"
-    @printf "{{ green }}Extension image built: {{ registry }}/{{ extension_repository }}:{{ tag }}{{ reset }}\n"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # OCI Images
 # ─────────────────────────────────────────────────────────────────────────────
+
+# Build (and optionally push) the extension OCI image
+[group('oci')]
+oci:
+    @just _build-oci "{{ extension_repository }}" "{{ extension }}"
+    @printf "{{ green }}Extension image built: {{ registry }}/{{ extension_repository }}:{{ tag }}{{ reset }}\n"
+
+# Merge per-platform images into a multi-arch OCI index
+[group('oci')]
+[script]
+merge *sources:
+    {{ container_runtime }} run --rm --network=host \
+        -e KOCI_REGISTRY_USERNAME -e KOCI_REGISTRY_PASSWORD \
+        {{ toolchain }} \
+        /koci merge \
+            --image "{{ registry }}/{{ extension_repository }}" \
+            --tag "{{ tag }}" \
+            {{ sources }}
 
 # Repack an OCI image's layers into eStargz, in place.
 [group('oci')]

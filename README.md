@@ -19,5 +19,5 @@ A local OCI registry makes iterative testing easy:
 ```sh
 podman run -d -p 5000:5000 --name registry docker.io/library/registry:3
 
-REGISTRY="localhost:5000" EXTENSION=qemu just build
+REGISTRY="localhost:5000" EXTENSION=qemu just oci
 ```

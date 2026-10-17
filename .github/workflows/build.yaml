@@ -72,7 +72,7 @@ jobs:
           PUSH: "true"
           TAG: ${{ steps.tag.outputs.tag }}
 
-      - name: Annotate extension sizes (${{ steps.tag.outputs.tag }})
+      - name: Repack image layers (${{ steps.tag.outputs.tag }})
         if: github.event_name != 'pull_request' && (github.event_name != 'workflow_dispatch' || inputs.extension == matrix.extension)
         env:
           EXTENSION: ${{ matrix.extension }}
@@ -80,7 +80,7 @@ jobs:
           TAG: ${{ steps.tag.outputs.tag }}
           KOCI_REGISTRY_USERNAME: ${{ github.actor }}
           KOCI_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-        run: just annotate
+        run: just repack
 
       - name: Build summary
         if: github.event_name != 'pull_request' && (github.event_name != 'workflow_dispatch' || inputs.extension == matrix.extension)
